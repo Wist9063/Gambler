@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { setTimeout } from 'node:timers/promises';
 import type { Command } from './index.js';
 
 export default {
@@ -30,11 +30,12 @@ export default {
 
 		const result = Math.random() < 0.5 ? 'heads' : 'tails';
 
-		const embed = new EmbedBuilder()
-			.setTitle('Coin Flip')
-			.setDescription(`You bet ${amountOption.value} on ${betOption.value}\n\nThe coin landed on ${result}`)
-			.setColor(0x00ae86);
+		const outcome = betOption.value === result ? 'won' : 'lost';
 
-		await interaction.reply({ embeds: [embed] });
+		await interaction.reply(`You bet **$${amountOption.value}** on **${betOption.value}**...`);
+
+		await setTimeout(2_000);
+
+		await interaction.editReply(`The coin landed on **${result}**! You ${outcome} **$${amountOption.value}**!`);
 	},
 } satisfies Command;
